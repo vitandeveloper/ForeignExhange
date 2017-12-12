@@ -22,6 +22,7 @@
                    />
 
                 <Entry
+                    Text="{Binding Amount, Mode=TwoWay}"
                     Placeholder="Ingrese la cantidad"
                     
                     />
@@ -36,6 +37,9 @@
                    />
 
                 <Picker
+                    ItemsSource="{Binding Rates}"
+                    ItemDisplayBinding="{Binding Name}"
+                    SelectedItem="{Binding SourceRate, Mode=TwoWay}"
                     Title="Seleccione la taza">
                 </Picker>
             </StackLayout>
@@ -49,18 +53,26 @@
                    />
 
                 <Picker
-                    Title="Seleccione la taza"
+                    ItemsSource="{Binding Rates}"
+                    ItemDisplayBinding="{Binding Name}"
+                    SelectedItem="{Binding TargeteRate, Mode=TwoWay}"
+                    Title="Seleccione una taza de cambio">
                    >
                    
                 </Picker>
             </StackLayout>
 
-            <ActivityIndicator/>
+            <ActivityIndicator
+                IsRunning="{Binding IsRunning, Mode=TwoWay}">
+                
+            </ActivityIndicator>
 
             <Button 
+                Command="{Binding ConvertCommand}"
                 BackgroundColor="Green"
                 BorderRadius="20"
                 Margin="0,15,0,0"
+                IsEnabled="{Binding IsEnabled, Mode=TwoWay}"
                 Text="Convertir"
                 HeightRequest="40"
                 />
@@ -68,15 +80,12 @@
             <Label
                 Margin="0,15,0,0"
                 BackgroundColor="White"
-                Text="Cargando datos..."
+                Text="{Binding Result, Mode=TwoWay}"
                 TextColor="Black"
                 VerticalOptions="FillAndExpand"
                 VerticalTextAlignment="Center"
                 HorizontalTextAlignment="Center"
-                />
-
-
-
+                 />
 
         </StackLayout>
     </ContentPage.Content>
