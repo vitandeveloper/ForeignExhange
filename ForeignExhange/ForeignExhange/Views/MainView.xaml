@@ -30,7 +30,8 @@
 
             <Entry
                     Text="{Binding Amount, Mode=TwoWay}"
-                    Placeholder="Ingrese la cantidad">
+                    Placeholder="Ingrese la cantidad"
+                    Keyboard="Numeric">
             </Entry>
 
             <Label 
