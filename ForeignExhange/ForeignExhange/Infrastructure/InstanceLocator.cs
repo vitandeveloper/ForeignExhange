@@ -1,4 +1,4 @@
-﻿
+﻿/// SE encarga de establecer el vinculo entre las VISTA y los View Model
 namespace ForeignExhange.Infrastructure
 {
 

@@ -2,66 +2,113 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ForeignExhange.Views.MainView"
+             xmlns:i18n="clr-namespace:ForeignExhange.Helpers"
              BindingContext="{Binding Main, Source={StaticResource Locator}}">
+    
     <ContentPage.Padding>
         <OnPlatform 
             x:TypeArguments="Thickness"
-            iOS="20,30,20,10"
-            Android="20,10,20,10"/>
+            iOS="20,30,20,20"
+            Android="20,10,20,20"/>
     </ContentPage.Padding>
     
     <ContentPage.Content>
         <StackLayout>
 
             <Label 
-                    Text="Fareign Exchange"
+                    Text="{i18n:Translate Title}" 
                     FontAttributes="Bold"
                     FontSize="Medium"
-                    HorizontalOptions="Center">
+                    HorizontalOptions="Center"
+                    Margin="0,0,0,10">
             </Label>
 
-            <Label 
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <Label 
+                    Grid.Row="0"
+                    Grid.Column="0"
                     Margin="0,15,0,0"
-                    Text="Monto"
+                    Text="{i18n:Translate AmountLabel}" 
                     VerticalOptions="Center"
-                    FontSize="Medium"
-                    FontAttributes="Bold">
-            </Label>
+                    FontSize="13"
+                    FontAttributes="Bold"
+                    >
+                </Label>
 
-            <Entry
+                <Entry
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="2"
+                    FontSize="13"
                     Text="{Binding Amount, Mode=TwoWay}"
-                    Placeholder="Ingrese la cantidad"
+                    Placeholder="{i18n:Translate AmountPlaceHolder}" 
                     Keyboard="Numeric">
-            </Entry>
+                </Entry>
 
-            <Label 
-                   Text="Taza origen"
+                <Label 
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Text="{i18n:Translate SourceRateLabel}" 
                     VerticalOptions="Center"
-                    FontSize="Medium"
-                    FontAttributes="Bold">
-            </Label>
+                    FontSize="13"
+                    FontAttributes="Bold"
+                    >
+                </Label>
 
-            <Picker
+                <Picker
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="2"
                     ItemsSource="{Binding Rates}"
                     ItemDisplayBinding="{Binding Name}"
                     SelectedItem="{Binding SourceRate, Mode=TwoWay}"
-                    Title="Seleccione la taza">
-            </Picker>
+                    Title="{i18n:Translate SourceRateTitle}">
+                </Picker>
 
-
-            <Label 
-                   Text="Taza odjetivo"
+                <Label 
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Text="{i18n:Translate TargetRateLabel}"
                     VerticalOptions="Center"
-                    FontSize="Medium"
-                    FontAttributes="Bold">
-            </Label>
+                    FontSize="13"
+                    FontAttributes="Bold"
+                    >
+                </Label>
 
-            <Picker
+                <Picker
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="2"
                     ItemsSource="{Binding Rates}"
-                    ItemDisplayBinding="{Binding Name}"
+                    ItemDisplayBinding="{Binding Name}" 
                     SelectedItem="{Binding TargeteRate, Mode=TwoWay}"
-                    Title="Seleccione una taza de cambio">
-            </Picker>
+                    Title="{i18n:Translate TargetRateTitle}">
+                </Picker>
+
+                <Image
+                    Grid.Row="1"
+                    Grid.Column="3"
+                    Grid.RowSpan="2"
+                    Aspect="AspectFit"
+                    Source="ic_change_money.png">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SwitchCommand, Mode=TwoWay}"/>
+                    </Image.GestureRecognizers>
+                </Image>
+
+            </Grid>
 
             <ActivityIndicator
                     IsRunning="{Binding IsRunning, Mode=TwoWay}">
@@ -73,7 +120,7 @@
                     BorderRadius="20"
                     Margin="0,15,0,0"
                     IsEnabled="{Binding IsEnabled, Mode=TwoWay}"
-                    Text="Convertir"
+                    Text="{i18n:Translate Convert}"
                     HeightRequest="40">
             </Button>
 

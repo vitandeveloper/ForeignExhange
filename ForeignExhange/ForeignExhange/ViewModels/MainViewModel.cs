@@ -11,6 +11,7 @@ namespace ForeignExhange.ViewModels
     using Newtonsoft.Json;
     using System.Collections.Generic;
     using Xamarin.Forms;
+    using ForeignExhange.Helpers;
 
     public class MainViewModel : INotifyPropertyChanged
     {
@@ -22,6 +23,8 @@ namespace ForeignExhange.ViewModels
         bool _isRunning;
         bool _isEnabled;
         string _result;
+        Rate _sourceRate;
+        Rate _targetRate;
         ObservableCollection<Rate> _rates;
         #endregion
 
@@ -42,8 +45,36 @@ namespace ForeignExhange.ViewModels
                 }
             }
         }
-        public Rate SourceRate { get; set; }
-        public Rate TargeteRate { get; set; }
+        public Rate SourceRate
+        {
+            get
+            {
+                return _sourceRate;
+            }
+            set
+            {
+                if(_sourceRate != value)
+                {
+                    _sourceRate = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SourceRate)));
+                }
+            }
+        }
+        public Rate TargeteRate
+        {
+            get
+            {
+                return _targetRate;
+            }
+            set
+            {
+                if (_targetRate != value)
+                {
+                    _targetRate = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TargeteRate)));
+                }
+            }
+        }
         public bool IsRunning
         {
             get
@@ -102,7 +133,7 @@ namespace ForeignExhange.ViewModels
         async void LoadRates()
         {
             IsRunning = true;
-            Result = "Cargando datos...";
+            Result = Lenguages.Loading;
             try
             {
                 var client = new HttpClient();
@@ -121,7 +152,7 @@ namespace ForeignExhange.ViewModels
 
                 IsRunning = false;
                 IsEnabled = true;
-                Result = "Listo para convertir";
+                Result = Lenguages.Ready;
             
             }
             catch
@@ -141,40 +172,43 @@ namespace ForeignExhange.ViewModels
                 return new RelayCommand(Convert);
             }
         }
+
         async void Convert()
         {
            if(string.IsNullOrEmpty(Amount))
            {
-                await Application.Current.MainPage.DisplayAlert("Alerta",
-                                                                "Ingrece un monto",
-                                                                "Ok");
+                await Application.Current.MainPage.DisplayAlert(Lenguages.Error,
+                                                                Lenguages.AmountPlaceHolder,
+                                                                Lenguages.Accept);
                 return;
             }
 
             decimal amount = 0;
             if(!decimal.TryParse(Amount, out amount))
             {
-                await Application.Current.MainPage.DisplayAlert("Alerta",
-                                                                "Ingrece un monto numerico",
-                                                                "Ok");
+                await Application.Current.MainPage.DisplayAlert(Lenguages.Error,
+                                                                Lenguages.AmountNumericValidation,
+                                                                Lenguages.Accept);
                 return;
             }
 
-            if(SourceRate == null)
-            {
-                await Application.Current.MainPage.DisplayAlert("Alerta",
-                                                                "Seleccione una taza origen",
-                                                                 "Ok");
+           if(SourceRate == null)
+           {
+                  await Application.Current.MainPage.DisplayAlert(Lenguages.Error,
+                                                                  Lenguages.SourceRateTitle,
+                                                                   Lenguages.Accept);
+                  return;
+           }
+
+           if (TargeteRate == null)
+           {
+                await Application.Current.MainPage.DisplayAlert(Lenguages.Error,
+                                                                Lenguages.TargetRateTitle,
+                                                                Lenguages.Accept);
                 return;
+
             }
 
-            if (TargeteRate == null)
-            {
-                await Application.Current.MainPage.DisplayAlert("Alerta",
-                                                                "Seleccione una taza destino",
-                                                                "Ok");
-                return;
-            }
 
             var amountConerted = amount / (decimal)SourceRate.TaxRate *
                                          (decimal)TargeteRate.TaxRate;
@@ -184,6 +218,24 @@ namespace ForeignExhange.ViewModels
                                     TargeteRate.Code,
                                     amountConerted);
         }
+
+
+        public ICommand SwitchCommand
+        {
+            get
+            {
+                return new RelayCommand(Switch);
+            }
+        }
+
+        void Switch()
+        {
+            var aux = TargeteRate;
+            TargeteRate = SourceRate;
+            SourceRate = aux;
+            Convert();
+        }
+
         #endregion
 
 
