@@ -125,11 +125,38 @@ namespace ForeignExhange.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a check your internet connection.
+        /// </summary>
+        public static string Error_conecction {
+            get {
+                return ResourceManager.GetString("Error_conecction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a check your settings connection.
+        /// </summary>
+        public static string Error_settings {
+            get {
+                return ResourceManager.GetString("Error_settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Loading rates...
         /// </summary>
         public static string Loading {
             get {
                 return ResourceManager.GetString("Loading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Rates loaded from internet.
+        /// </summary>
+        public static string Rate_loaded_internet {
+            get {
+                return ResourceManager.GetString("Rate_loaded_internet", resourceCulture);
             }
         }
         

@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ForeignExhange.Views.MainView"
              xmlns:i18n="clr-namespace:ForeignExhange.Helpers"
-             BindingContext="{Binding Main, Source={StaticResource Locator}}">
+             BindingContext="{Binding Main, Source={StaticResource Locator}}"
+             BackgroundColor="#EEEEEE">
     
     <ContentPage.Padding>
         <OnPlatform 
@@ -35,7 +36,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                
+
                 <Label 
                     Grid.Row="0"
                     Grid.Column="0"
@@ -97,42 +98,77 @@
                     Title="{i18n:Translate TargetRateTitle}">
                 </Picker>
 
-                <Image
+                <StackLayout
                     Grid.Row="1"
                     Grid.Column="3"
                     Grid.RowSpan="2"
-                    Aspect="AspectFit"
-                    Source="ic_change_money.png">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding SwitchCommand, Mode=TwoWay}"/>
-                    </Image.GestureRecognizers>
-                </Image>
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+
+                    <Image
+                    HeightRequest="50"
+                    WidthRequest="50"
+                    Source="ic_change_money.png"
+                    >
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SwitchCommand, Mode=TwoWay}"/>
+                        </Image.GestureRecognizers>
+                    </Image>
+
+                </StackLayout>
 
             </Grid>
 
-            <ActivityIndicator
+            <!-- 
+                <ActivityIndicator
+                  
                     IsRunning="{Binding IsRunning, Mode=TwoWay}">
-            </ActivityIndicator>
+                </ActivityIndicator>
+                -->
 
             <Button 
-                    Command="{Binding ConvertCommand}"
-                    BackgroundColor="Green"
-                    BorderRadius="20"
-                    Margin="0,15,0,0"
-                    IsEnabled="{Binding IsEnabled, Mode=TwoWay}"
-                    Text="{i18n:Translate Convert}"
-                    HeightRequest="40">
+                Command="{Binding ConvertCommand}"
+                 BackgroundColor="#00796B"
+                 Margin="0,15,0,0"
+                 IsEnabled="{Binding IsEnabled, Mode=TwoWay}"
+                 Text="{i18n:Translate Convert}"
+                 FontSize="15"
+                 TextColor="White"
+                 HeightRequest="40"
+                >
             </Button>
 
-            <Label
-                    Margin="0,15,0,0"
-                    BackgroundColor="White"
+            <Frame
+                CornerRadius="20"
+                Margin="0,15,0,0"
+                BackgroundColor="White"
+                VerticalOptions="FillAndExpand">
+
+                <Label
                     Text="{Binding Result, Mode=TwoWay}"
                     TextColor="Black"
-                    VerticalOptions="FillAndExpand"
                     VerticalTextAlignment="Center"
                     HorizontalTextAlignment="Center">
-            </Label>
+                </Label>
+
+            </Frame>
+
+      
+            <StackLayout
+                Margin="0,15,0,0"
+                BackgroundColor="{Binding ColorAlert, Mode=TwoWay}"
+                HeightRequest="35"
+                >
+                <Label
+                TextColor="White"
+                VerticalOptions="CenterAndExpand"
+                FontSize="13"
+                FontAttributes="Bold"
+                HorizontalTextAlignment="Center"
+                Text="{Binding Status, Mode=TwoWay}"
+                >
+                </Label>
+            </StackLayout>
 
         </StackLayout>
     </ContentPage.Content>

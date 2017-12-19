@@ -94,6 +94,28 @@ namespace ForeignExhange.Helpers
             get { return Resource.TargetRateValidation; }
         }
 
+        public static string Error_conecction
+        {
+            get { return Resource.Error_conecction; }
+        }
+
+        public static string Error_settings
+        {
+            get { return Resource.Error_settings; }
+        }
+
+        public static string Rate_loaded_internet
+        {
+            get { return Resource.Rate_loaded_internet; }
+        }
+
+
+
+
+
+
+
+
     }
 
 }

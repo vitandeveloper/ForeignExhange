@@ -5,16 +5,18 @@ namespace ForeignExhange.ViewModels
     using GalaSoft.MvvmLight.Command;
     using System.Collections.ObjectModel;
     using System.Windows.Input;
-    using System;
     using System.ComponentModel;
-    using System.Net.Http;
-    using Newtonsoft.Json;
-    using System.Collections.Generic;
     using Xamarin.Forms;
     using ForeignExhange.Helpers;
+    using ForeignExhange.Services;
+    using System.Collections.Generic;
 
     public class MainViewModel : INotifyPropertyChanged
     {
+        #region Services
+        ApiService apiServices;
+        #endregion
+
         #region Eventes
         public event PropertyChangedEventHandler PropertyChanged;
         #endregion
@@ -23,6 +25,8 @@ namespace ForeignExhange.ViewModels
         bool _isRunning;
         bool _isEnabled;
         string _result;
+        string _status;
+        string _colorAlert;
         Rate _sourceRate;
         Rate _targetRate;
         ObservableCollection<Rate> _rates;
@@ -120,11 +124,46 @@ namespace ForeignExhange.ViewModels
                 }
             }
          }
+
+        public string Status
+        {
+            get
+            {
+                return _status;
+            }
+            set
+            {
+                if(_status != value)
+                {
+                    _status = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Status)));
+                }
+            }
+        }
+
+        public string ColorAlert
+        {
+            get
+            {
+                return _colorAlert;
+            }
+            set
+            {
+                if (_colorAlert != value)
+                {
+                    _colorAlert = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ColorAlert)));
+                }
+            }
+        }
+
+
         #endregion
 
         #region Constructors
         public MainViewModel()
         {
+            apiServices = new ApiService();
             LoadRates();
         }
         #endregion
@@ -133,34 +172,34 @@ namespace ForeignExhange.ViewModels
         async void LoadRates()
         {
             IsRunning = true;
-            Result = Lenguages.Loading;
-            try
-            {
-                var client = new HttpClient();
-                client.BaseAddress = new Uri("https://apiexchangerates.azurewebsites.net");
-                var controller = "/api/Rates";
-                var response = await client.GetAsync(controller);
-                var result = await response.Content.ReadAsStringAsync();
-                if(!response.IsSuccessStatusCode)
-                {
-                    IsRunning = false;
-                    Result = Result;
-                }
+            Status = Lenguages.Loading;
+            ColorAlert = Colors.ColorMessage;
 
-                var rates = JsonConvert.DeserializeObject<List<Rate>>(result);
-                Rates = new ObservableCollection<Rate>(rates);
-
-                IsRunning = false;
-                IsEnabled = true;
-                Result = Lenguages.Ready;
-            
-            }
-            catch
+            var connection = await apiServices.CheckConnection();
+            if (!connection.IsSucces)
             {
-                IsRunning = false;
-                Result = "Ocurrio algo al conectarnos con el servidor.";
+                _isRunning = true;
+                _colorAlert = Colors.ColorDangerInter;
+                _status = connection.Message;
+                return;
             }
-          
+
+            var response = await apiServices.GetList<Rate>
+                ("https://apiexchangerates.azurewebsites.net", "api/Rates");
+            if (!response.IsSucces)
+            {
+                _isRunning = true;
+                _result = response.Message;
+                return;
+            }
+
+            Rates = new ObservableCollection<Rate>((List<Rate>)response.Result);
+            IsRunning = false;
+            IsEnabled = true;
+            Result = Lenguages.Ready;
+            ColorAlert = Colors.ColorGod;
+            Status = Lenguages.Rate_loaded_internet;
+
         }
         #endregion
 
@@ -206,7 +245,6 @@ namespace ForeignExhange.ViewModels
                                                                 Lenguages.TargetRateTitle,
                                                                 Lenguages.Accept);
                 return;
-
             }
 
 

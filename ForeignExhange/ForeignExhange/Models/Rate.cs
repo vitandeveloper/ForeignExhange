@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace ForeignExhange.Models
 {
-   public class Rate
+    using SQLite;
+
+    public class Rate
     {
+        [PrimaryKey] //Convierte en clave primaria RadeId  para poder meter este modelo en una base de datos
         public int RateId { get; set; }
         public string Code { get; set; }
         public double TaxRate { get; set; }

@@ -138,8 +138,17 @@
   <data name="Error" xml:space="preserve">
     <value>Error</value>
   </data>
+  <data name="Error_conecction" xml:space="preserve">
+    <value>Verifique su conexión a internet</value>
+  </data>
+  <data name="Error_settings" xml:space="preserve">
+    <value>Verifique sus ajustes de internet</value>
+  </data>
   <data name="Loading" xml:space="preserve">
     <value>Cargando monedas…</value>
+  </data>
+  <data name="Rate_loaded_internet" xml:space="preserve">
+    <value>Tazas cargadas de internet</value>
   </data>
   <data name="Ready" xml:space="preserve">
     <value>Listo para convertir !</value>
