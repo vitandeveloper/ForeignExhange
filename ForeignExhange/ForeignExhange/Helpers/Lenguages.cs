@@ -109,6 +109,16 @@ namespace ForeignExhange.Helpers
             get { return Resource.Rate_loaded_internet; }
         }
 
+        public static string Rate_loaded_localdata
+        {
+            get { return Resource.Rate_loaded_localdata; }
+        }
+
+        public static string Erro_internet_db
+        {
+            get { return Resource.Erro_internet_db; }
+        }
+
 
 
 

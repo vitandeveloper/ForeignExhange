@@ -144,11 +144,17 @@
   <data name="Error_settings" xml:space="preserve">
     <value>check your settings connection</value>
   </data>
+  <data name="Erro_internet_db" xml:space="preserve">
+    <value>there not are no internet connection or saved data</value>
+  </data>
   <data name="Loading" xml:space="preserve">
     <value>Loading rates..</value>
   </data>
   <data name="Rate_loaded_internet" xml:space="preserve">
     <value>Rates loaded from internet</value>
+  </data>
+  <data name="Rate_loaded_localdata" xml:space="preserve">
+    <value>Rates loaded from local data</value>
   </data>
   <data name="Ready" xml:space="preserve">
     <value>Ready to convert!</value>

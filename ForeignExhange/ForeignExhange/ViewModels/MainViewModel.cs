@@ -10,11 +10,15 @@ namespace ForeignExhange.ViewModels
     using ForeignExhange.Helpers;
     using ForeignExhange.Services;
     using System.Collections.Generic;
+    using System;
+    using System.Threading.Tasks;
 
     public class MainViewModel : INotifyPropertyChanged
     {
         #region Services
         ApiService apiServices;
+        DataService dataService;
+        DialogService dialogService;
         #endregion
 
         #region Eventes
@@ -29,6 +33,7 @@ namespace ForeignExhange.ViewModels
         string _colorAlert;
         Rate _sourceRate;
         Rate _targetRate;
+        List<Rate> rates;
         ObservableCollection<Rate> _rates;
         #endregion
 
@@ -164,6 +169,8 @@ namespace ForeignExhange.ViewModels
         public MainViewModel()
         {
             apiServices = new ApiService();
+            dataService = new DataService();
+            dialogService = new DialogService();
             LoadRates();
         }
         #endregion
@@ -181,24 +188,54 @@ namespace ForeignExhange.ViewModels
                 _isRunning = true;
                 _colorAlert = Colors.ColorDangerInter;
                 _status = connection.Message;
-                return;
+                LoadLocalData();
+            }
+            else
+            {
+                await LoadDataFromAPI();
             }
 
-            var response = await apiServices.GetList<Rate>
-                ("https://apiexchangerates.azurewebsites.net", "api/Rates");
+            if (rates.Count ==0)
+            {
+                IsEnabled = false;
+                IsRunning = false;
+                Status = Lenguages.Erro_internet_db;
+                ColorAlert = Colors.ColorDanger;
+                return;
+            }
+            else
+            {
+                Rates = new ObservableCollection<Rate>(rates);
+                IsRunning = false;
+                IsEnabled = true;
+                Result = Lenguages.Ready; 
+            }
+
+        }
+
+        private void LoadLocalData()
+        {
+            rates = dataService.Get<Rate>(false);
+            Status = Lenguages.Rate_loaded_localdata;
+            ColorAlert = Colors.ColorFine;
+
+        }
+
+        async Task LoadDataFromAPI()
+        {
+            var response = await apiServices.GetList<Rate>("https://apiexchangerates.azurewebsites.net", "api/Rates");
             if (!response.IsSucces)
             {
-                _isRunning = true;
-                _result = response.Message;
+                LoadLocalData();
                 return;
             }
 
-            Rates = new ObservableCollection<Rate>((List<Rate>)response.Result);
-            IsRunning = false;
-            IsEnabled = true;
-            Result = Lenguages.Ready;
-            ColorAlert = Colors.ColorGod;
             Status = Lenguages.Rate_loaded_internet;
+            ColorAlert = Colors.ColorGod;
+            //borra la db anterios (si la hay) y guarda una nueva con los datos actuales
+            rates = (List<Rate>)response.Result;
+            dataService.DeleteAll<Rate>();
+            dataService.Save(rates);
 
         }
         #endregion
@@ -216,34 +253,26 @@ namespace ForeignExhange.ViewModels
         {
            if(string.IsNullOrEmpty(Amount))
            {
-                await Application.Current.MainPage.DisplayAlert(Lenguages.Error,
-                                                                Lenguages.AmountPlaceHolder,
-                                                                Lenguages.Accept);
+                await dialogService.ShowMessage(Lenguages.Error,Lenguages.AmountPlaceHolder);
                 return;
             }
 
             decimal amount = 0;
             if(!decimal.TryParse(Amount, out amount))
             {
-                await Application.Current.MainPage.DisplayAlert(Lenguages.Error,
-                                                                Lenguages.AmountNumericValidation,
-                                                                Lenguages.Accept);
+                await dialogService.ShowMessage(Lenguages.Error, Lenguages.AmountNumericValidation);
                 return;
             }
 
            if(SourceRate == null)
            {
-                  await Application.Current.MainPage.DisplayAlert(Lenguages.Error,
-                                                                  Lenguages.SourceRateTitle,
-                                                                   Lenguages.Accept);
+                  await dialogService.ShowMessage(Lenguages.Error,Lenguages.SourceRateTitle);
                   return;
            }
 
            if (TargeteRate == null)
            {
-                await Application.Current.MainPage.DisplayAlert(Lenguages.Error,
-                                                                Lenguages.TargetRateTitle,
-                                                                Lenguages.Accept);
+                await dialogService.ShowMessage(Lenguages.Error,Lenguages.TargetRateTitle);
                 return;
             }
 

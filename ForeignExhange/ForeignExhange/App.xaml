@@ -9,6 +9,7 @@
         <ResourceDictionary>
             <!--Locator-->
             <infra:InstanceLocator x:Key="Locator"/>
+          
             
         </ResourceDictionary>
 	</Application.Resources>

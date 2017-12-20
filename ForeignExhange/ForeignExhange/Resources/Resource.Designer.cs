@@ -116,6 +116,15 @@ namespace ForeignExhange.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a there not are no internet connection or saved data.
+        /// </summary>
+        public static string Erro_internet_db {
+            get {
+                return ResourceManager.GetString("Erro_internet_db", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Error.
         /// </summary>
         public static string Error {
@@ -157,6 +166,15 @@ namespace ForeignExhange.Resources {
         public static string Rate_loaded_internet {
             get {
                 return ResourceManager.GetString("Rate_loaded_internet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Rates loaded from local data.
+        /// </summary>
+        public static string Rate_loaded_localdata {
+            get {
+                return ResourceManager.GetString("Rate_loaded_localdata", resourceCulture);
             }
         }
         

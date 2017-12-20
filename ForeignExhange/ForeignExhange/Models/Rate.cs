@@ -10,5 +10,11 @@ namespace ForeignExhange.Models
         public string Code { get; set; }
         public double TaxRate { get; set; }
         public string Name { get; set; }
+
+        //sobre escribir este metodo para retonar la Primary Key de la clase al hacer busquedas
+        public override int GetHashCode()
+        {
+            return RateId;
+        }
     }
 }

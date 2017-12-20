@@ -19,7 +19,7 @@ namespace ForeignExhange.Models
             get { return "#FF5722"; }
         }
 
-        public static string Colorfine
+        public static string ColorFine
         {
             get { return "#8BC34A"; }
         }
